@@ -12,9 +12,7 @@ try:
     import ghhops_server as hs  # type: ignore[import-untyped]
     from flask import Flask
 except ImportError as exc:  # pragma: no cover
-    raise SystemExit(
-        'Install Hops dependencies with: python -m pip install -e ".[hops]"'
-    ) from exc
+    raise SystemExit('Install Hops dependencies with: python -m pip install -e ".[hops]"') from exc
 
 from .collision import check_pose
 from .models import Pose, Scene
