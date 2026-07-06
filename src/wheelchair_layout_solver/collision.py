@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from math import inf
 
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon  # type: ignore[import-untyped]
 
 from .geometry import exterior_coordinates, footprint_at_pose, polygon_from_data
 from .models import Pose, PoseCheckResult, Scene

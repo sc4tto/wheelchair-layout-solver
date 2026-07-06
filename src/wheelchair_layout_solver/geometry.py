@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from shapely import affinity
-from shapely.geometry import Polygon, box
+from shapely import affinity  # type: ignore[import-untyped]
+from shapely.geometry import Polygon, box  # type: ignore[import-untyped]
 
 from .models import PolygonData, Pose, WheelchairSpec
 
