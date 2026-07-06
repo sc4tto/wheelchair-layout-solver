@@ -20,6 +20,9 @@ class DxfEntitySummary:
     is_closed: bool | None
     point_count: int | None
     xdata: dict[str, list[tuple[int, str]]]
+    vertices: list[tuple[float, float]]
+    point: tuple[float, float] | None
+    attributes: dict[str, str]
 
 
 @dataclass(frozen=True)
@@ -63,6 +66,33 @@ def _entity_point_count(entity: Any) -> int | None:
     return None
 
 
+def _polyline_vertices(entity: Any) -> list[tuple[float, float]]:
+    """Return XY vertices for supported polyline entities."""
+
+    entity_type = entity.dxftype()
+
+    if entity_type == "POLYLINE":
+        return [
+            (float(vertex.dxf.location.x), float(vertex.dxf.location.y))
+            for vertex in entity.vertices
+        ]
+
+    if entity_type == "LWPOLYLINE":
+        return [(float(x), float(y)) for x, y in entity.get_points("xy")]
+
+    return []
+
+
+def _point_coordinates(entity: Any) -> tuple[float, float] | None:
+    """Return XY coordinates for a POINT entity."""
+
+    if entity.dxftype() != "POINT":
+        return None
+
+    location = entity.dxf.location
+    return (float(location.x), float(location.y))
+
+
 def _entity_xdata(
     entity: Any,
     appids: list[str],
@@ -81,6 +111,31 @@ def _entity_xdata(
     return result
 
 
+def _parse_rhino_xdata(
+    xdata: dict[str, list[tuple[int, str]]],
+) -> dict[str, str]:
+    """Parse Rhino XDATA groups into flat key/value attributes."""
+
+    attributes: dict[str, str] = {}
+    current_group: list[str] | None = None
+
+    for code, value in xdata.get("Rhino", []):
+        if code == 1002 and value == "{":
+            current_group = []
+            continue
+
+        if code == 1002 and value == "}":
+            if current_group is not None and len(current_group) >= 2:
+                attributes[current_group[0]] = current_group[1]
+            current_group = None
+            continue
+
+        if current_group is not None and code == 1000:
+            current_group.append(value)
+
+    return attributes
+
+
 def inspect_dxf(path: str | Path) -> DxfInspection:
     """Read a DXF file and summarize its modelspace entities."""
 
@@ -96,6 +151,7 @@ def inspect_dxf(path: str | Path) -> DxfInspection:
     entities: list[DxfEntitySummary] = []
 
     for entity in modelspace:
+        xdata = _entity_xdata(entity, appids)
         entities.append(
             DxfEntitySummary(
                 handle=str(entity.dxf.handle),
@@ -103,7 +159,10 @@ def inspect_dxf(path: str | Path) -> DxfInspection:
                 layer=str(entity.dxf.layer),
                 is_closed=_entity_is_closed(entity),
                 point_count=_entity_point_count(entity),
-                xdata=_entity_xdata(entity, appids),
+                xdata=xdata,
+                vertices=_polyline_vertices(entity),
+                point=_point_coordinates(entity),
+                attributes=_parse_rhino_xdata(xdata),
             )
         )
 
@@ -112,6 +171,12 @@ def inspect_dxf(path: str | Path) -> DxfInspection:
         insunits=int(document.header.get("$INSUNITS", 0)),
         entities=entities,
     )
+
+
+def _format_xy(point: tuple[float, float]) -> str:
+    """Format XY coordinates for stable text reports."""
+
+    return f"({point[0]:.6f}, {point[1]:.6f})"
 
 
 def format_inspection(inspection: DxfInspection) -> str:
@@ -142,6 +207,19 @@ def format_inspection(inspection: DxfInspection) -> str:
             f"closed={entity.is_closed} "
             f"points={entity.point_count}"
         )
+
+        if entity.vertices:
+            lines.append("    vertices:")
+            for vertex in entity.vertices:
+                lines.append(f"      {_format_xy(vertex)}")
+
+        if entity.point is not None:
+            lines.append(f"    point: {_format_xy(entity.point)}")
+
+        if entity.attributes:
+            lines.append("    attributes:")
+            for key, value in sorted(entity.attributes.items()):
+                lines.append(f"      {key} = {value}")
 
         for appid, tags in entity.xdata.items():
             lines.append(f"    XDATA {appid}:")
