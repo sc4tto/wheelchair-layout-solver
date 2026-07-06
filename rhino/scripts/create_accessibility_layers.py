@@ -63,9 +63,7 @@ def load_config(path: Path) -> dict[str, Any]:
     layers = config.get("layers")
 
     if not isinstance(layers, list):
-        raise ValueError(
-            "The configuration file must contain a 'layers' list."
-        )
+        raise ValueError("The configuration file must contain a 'layers' list.")
 
     return config
 
@@ -94,9 +92,7 @@ def create_or_update_layer(layer_data: dict[str, Any]) -> str:
     )
 
     if not created_layer:
-        raise RuntimeError(
-            f"Rhino could not create layer '{name}'."
-        )
+        raise RuntimeError(f"Rhino could not create layer '{name}'.")
 
     print(f"Created layer: {name}")
     return created_layer
