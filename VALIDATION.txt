@@ -1,0 +1,21 @@
+VALIDATION REPORT
+=================
+
+Date: 2026-07-06
+Package version: 0.1.0
+
+Executed:
+- Python source compilation
+- pytest with PYTHONPATH=src
+
+Result:
+- 5 tests passed
+- No test failures
+
+Not executed in the artifact environment:
+- Ruff linting
+- Mypy static type checking
+- Wheel build through Hatchling
+
+Those checks are configured in GitHub Actions and can be run locally after
+installing the development extras.

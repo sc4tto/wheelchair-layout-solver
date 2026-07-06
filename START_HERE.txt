@@ -1,0 +1,56 @@
+WHEELCHAIR LAYOUT SOLVER — START HERE
+====================================
+
+1. Estrai la cartella sul Desktop, ad esempio:
+
+   C:\Users\TUO_NOME\Desktop\wheelchair-layout-solver
+
+2. Installa:
+   - Python 3.11 a 64 bit;
+   - Git;
+   - Visual Studio Code;
+   - Rhino 8 e Grasshopper, quando servirà il collegamento Hops.
+
+3. In Visual Studio Code:
+   - File > Open Folder;
+   - seleziona wheelchair-layout-solver;
+   - Terminal > New Terminal.
+
+4. Nel terminale PowerShell esegui:
+
+   Set-ExecutionPolicy -Scope Process Bypass
+   ./scripts/setup_windows.ps1
+
+5. Controlla il progetto:
+
+   .\.venv\Scripts\python.exe -m pytest
+
+6. Prova il primo collision checker:
+
+   .\.venv\Scripts\wheelchair-solver.exe check-pose `
+     samples/bathroom_01.json --x 1.25 --y 1.25 --angle 0
+
+7. Inizializza Git:
+
+   git init
+   git add .
+   git commit -m "Initial project scaffold"
+   git branch -M main
+
+8. Dopo aver creato su GitHub un repository vuoto chiamato
+   wheelchair-layout-solver:
+
+   git remote add origin https://github.com/TUO-USERNAME/wheelchair-layout-solver.git
+   git push -u origin main
+
+9. Prima del caricamento:
+   - sostituisci YOUR-GITHUB-USERNAME in pyproject.toml;
+   - controlla nome autore e licenza;
+   - non inserire file CAD privati;
+   - non inserire chiavi API o password.
+
+10. Primo obiettivo tecnico:
+    - sostituire l'esempio JSON con una tua pianta campione;
+    - verificare una posa;
+    - verificare un percorso manuale;
+    - poi aggiungere l'importatore DXF e Grasshopper/Hops.

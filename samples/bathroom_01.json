@@ -1,0 +1,111 @@
+{
+  "schema_version": "0.1",
+  "units": "meters",
+  "room": {
+    "coordinates": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        3.0,
+        0.0
+      ],
+      [
+        3.0,
+        2.5
+      ],
+      [
+        0.0,
+        2.5
+      ]
+    ]
+  },
+  "obstacles": [
+    {
+      "id": "WC_01",
+      "polygon": {
+        "coordinates": [
+          [
+            2.15,
+            0.15
+          ],
+          [
+            2.8,
+            0.15
+          ],
+          [
+            2.8,
+            0.85
+          ],
+          [
+            2.15,
+            0.85
+          ]
+        ]
+      }
+    },
+    {
+      "id": "SINK_01",
+      "polygon": {
+        "coordinates": [
+          [
+            0.15,
+            1.9
+          ],
+          [
+            0.75,
+            1.9
+          ],
+          [
+            0.75,
+            2.35
+          ],
+          [
+            0.15,
+            2.35
+          ]
+        ]
+      }
+    }
+  ],
+  "wheelchair": {
+    "width": 0.7,
+    "length": 1.1,
+    "safety_margin": 0.02,
+    "reference_offset_x": 0.0,
+    "can_rotate_in_place": true,
+    "can_reverse": true,
+    "minimum_turning_radius": 0.0
+  },
+  "path_settings": {
+    "spatial_step": 0.02,
+    "angular_step_deg": 2.0
+  },
+  "manual_path": [
+    {
+      "x": 0.75,
+      "y": 1.25,
+      "angle_deg": 0.0,
+      "reverse": false
+    },
+    {
+      "x": 1.25,
+      "y": 1.25,
+      "angle_deg": 0.0,
+      "reverse": false
+    },
+    {
+      "x": 1.85,
+      "y": 1.0,
+      "angle_deg": -20.0,
+      "reverse": false
+    },
+    {
+      "x": 2.45,
+      "y": 0.5,
+      "angle_deg": -90.0,
+      "reverse": false
+    }
+  ]
+}

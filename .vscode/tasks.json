@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Tests",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pytest"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run API",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\wheelchair-solver.exe",
+      "args": ["serve"],
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}
