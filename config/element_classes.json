@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "layers": [
+    {
+      "name": "ACC_ROOM",
+      "class": "room",
+      "geometry_type": "closed_curve",
+      "placement": "fixed",
+      "required": true
+    },
+    {
+      "name": "ACC_WALL",
+      "class": "wall",
+      "geometry_type": "curve_or_closed_curve",
+      "placement": "fixed",
+      "required": false
+    },
+    {
+      "name": "ACC_OBSTACLE",
+      "class": "obstacle",
+      "geometry_type": "closed_curve",
+      "placement": "fixed",
+      "required": false
+    },
+    {
+      "name": "ACC_DOOR",
+      "class": "door",
+      "geometry_type": "block",
+      "placement": "fixed_or_variable",
+      "required": true
+    },
+    {
+      "name": "ACC_WC",
+      "class": "toilet",
+      "geometry_type": "block",
+      "placement": "wall",
+      "required": true
+    },
+    {
+      "name": "ACC_SINK",
+      "class": "sink",
+      "geometry_type": "block",
+      "placement": "wall",
+      "required": true
+    },
+    {
+      "name": "ACC_BIDET",
+      "class": "bidet",
+      "geometry_type": "block",
+      "placement": "wall",
+      "required": false
+    },
+    {
+      "name": "ACC_SHOWER",
+      "class": "shower",
+      "geometry_type": "closed_curve_or_block",
+      "placement": "wall_or_corner",
+      "required": false
+    },
+    {
+      "name": "ACC_ENTRY",
+      "class": "entry",
+      "geometry_type": "point_or_block",
+      "placement": "fixed",
+      "required": true
+    },
+    {
+      "name": "ACC_TARGET",
+      "class": "target",
+      "geometry_type": "point_or_closed_curve",
+      "placement": "fixed",
+      "required": false
+    },
+    {
+      "name": "ACC_FUNCTIONAL_AREA",
+      "class": "functional_area",
+      "geometry_type": "closed_curve",
+      "placement": "derived_or_manual",
+      "required": false
+    }
+  ]
+}

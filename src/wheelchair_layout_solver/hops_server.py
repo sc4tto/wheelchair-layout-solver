@@ -9,8 +9,8 @@ from __future__ import annotations
 import json
 
 try:
+    import ghhops_server as hs  # type: ignore[import-untyped]
     from flask import Flask
-    import ghhops_server as hs
 except ImportError as exc:  # pragma: no cover
     raise SystemExit(
         'Install Hops dependencies with: python -m pip install -e ".[hops]"'
@@ -23,7 +23,7 @@ app = Flask(__name__)
 hops = hs.Hops(app)
 
 
-@hops.component(
+@hops.component(  # type: ignore[untyped-decorator]
     "/check_pose",
     name="Check Wheelchair Pose",
     nickname="CheckPose",
