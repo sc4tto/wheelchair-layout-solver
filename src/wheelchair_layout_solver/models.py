@@ -69,6 +69,8 @@ class Scene(StrictModel):
     room: PolygonData
     obstacles: list[Obstacle] = Field(default_factory=list)
     elements: list[ElementSpec] = Field(default_factory=list)
+    entry: Pose | None = None
+    target: Pose | None = None
     wheelchair: WheelchairSpec
     path_settings: PathSettings = Field(default_factory=PathSettings)
     manual_path: list[Pose] = Field(default_factory=list)
