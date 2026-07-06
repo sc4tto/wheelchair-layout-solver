@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from enum import Enum
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class StrictModel(BaseModel):
@@ -68,6 +70,7 @@ class Scene(StrictModel):
     units: str = "meters"
     room: PolygonData
     obstacles: list[Obstacle] = Field(default_factory=list)
+    elements: list[ElementSpec] = Field(default_factory=list)
     wheelchair: WheelchairSpec
     path_settings: PathSettings = Field(default_factory=PathSettings)
     manual_path: list[Pose] = Field(default_factory=list)
@@ -78,6 +81,103 @@ class Scene(StrictModel):
         if value != "meters":
             raise ValueError("The internal schema currently accepts only metres.")
         return value
+
+
+class ElementType(str, Enum):
+    """Supported semantic CAD element types."""
+
+    DOOR = "door"
+    TOILET = "toilet"
+    SINK = "sink"
+    BIDET = "bidet"
+    SHOWER = "shower"
+    OBSTACLE = "obstacle"
+
+
+class Transform(StrictModel):
+    """Nominal position and orientation of a CAD element."""
+
+    x: float = 0.0
+    y: float = 0.0
+    rotation_deg: float = 0.0
+
+
+class VariationBounds(StrictModel):
+    """Allowed absolute positions and rotations for a movable element."""
+
+    x_min: float | None = None
+    x_max: float | None = None
+    y_min: float | None = None
+    y_max: float | None = None
+    rotations_deg: list[float] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_ranges(self) -> VariationBounds:
+        if self.x_min is not None and self.x_max is not None:
+            if self.x_min > self.x_max:
+                raise ValueError("x_min cannot be greater than x_max.")
+
+        if self.y_min is not None and self.y_max is not None:
+            if self.y_min > self.y_max:
+                raise ValueError("y_min cannot be greater than y_max.")
+
+        if len(self.rotations_deg) != len(set(self.rotations_deg)):
+            raise ValueError("rotations_deg cannot contain duplicate values.")
+
+        return self
+
+
+class DimensionBounds(StrictModel):
+    """Allowed dimensional ranges for an element."""
+
+    width_min: float | None = Field(default=None, gt=0)
+    width_max: float | None = Field(default=None, gt=0)
+    depth_min: float | None = Field(default=None, gt=0)
+    depth_max: float | None = Field(default=None, gt=0)
+
+    @model_validator(mode="after")
+    def validate_ranges(self) -> DimensionBounds:
+        if self.width_min is not None and self.width_max is not None:
+            if self.width_min > self.width_max:
+                raise ValueError("width_min cannot be greater than width_max.")
+
+        if self.depth_min is not None and self.depth_max is not None:
+            if self.depth_min > self.depth_max:
+                raise ValueError("depth_min cannot be greater than depth_max.")
+
+        return self
+
+
+class FunctionalRequirements(StrictModel):
+    """Initial functional metadata associated with an element."""
+
+    transfer_side: str | None = None
+    front_approach: bool | None = None
+    knee_clearance: bool | None = None
+
+
+class ModificationCost(StrictModel):
+    """Relative costs used by future layout optimization."""
+
+    move: float = Field(default=0.0, ge=0)
+    rotate: float = Field(default=0.0, ge=0)
+    resize: float = Field(default=0.0, ge=0)
+    replace: float = Field(default=0.0, ge=0)
+
+
+class ElementSpec(StrictModel):
+    """Parametric semantic element imported from CAD."""
+
+    id: str = Field(min_length=1)
+    type: ElementType
+    layer: str = Field(min_length=1)
+    geometry: PolygonData
+    transform: Transform = Field(default_factory=Transform)
+    movable: bool = False
+    variation_bounds: VariationBounds | None = None
+    dimension_bounds: DimensionBounds | None = None
+    functional: FunctionalRequirements = Field(default_factory=FunctionalRequirements)
+    costs: ModificationCost = Field(default_factory=ModificationCost)
 
 
 class PoseCheckResult(StrictModel):
