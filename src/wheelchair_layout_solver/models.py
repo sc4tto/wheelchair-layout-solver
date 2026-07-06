@@ -29,9 +29,7 @@ class PolygonData(StrictModel):
 
     @field_validator("coordinates")
     @classmethod
-    def validate_coordinates(
-        cls, value: list[tuple[float, float]]
-    ) -> list[tuple[float, float]]:
+    def validate_coordinates(cls, value: list[tuple[float, float]]) -> list[tuple[float, float]]:
         if len(value) < 3:
             raise ValueError("A polygon requires at least three coordinates.")
         return value
