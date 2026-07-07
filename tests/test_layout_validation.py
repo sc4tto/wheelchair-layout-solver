@@ -28,9 +28,7 @@ def _element(element_id: str, x: float, y: float) -> ElementSpec:
         id=element_id,
         type=ElementType.TOILET,
         layer="ACC_WC",
-        geometry=PolygonData(
-            coordinates=[(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)]
-        ),
+        geometry=PolygonData(coordinates=[(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)]),
         transform=Transform(x=x, y=y),
     )
 
