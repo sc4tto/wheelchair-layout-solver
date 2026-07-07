@@ -103,8 +103,7 @@ def _candidate_transform_map(
             details.append(f"unknown: {', '.join(unknown)}")
         detail_text = "; ".join(details)
         raise LayoutValidationError(
-            f"Candidate {candidate.id} placements do not match semantic elements "
-            f"({detail_text})."
+            f"Candidate {candidate.id} placements do not match semantic elements ({detail_text})."
         )
 
     return {placement.element_id: placement.transform for placement in candidate.placements}
@@ -135,9 +134,7 @@ def _validate_candidate(
 
     for element_id, polygon in element_polygons:
         if not room.covers(polygon):
-            issues.append(
-                LayoutValidationIssue(code="outside_room", element_ids=[element_id])
-            )
+            issues.append(LayoutValidationIssue(code="outside_room", element_ids=[element_id]))
 
     for element_id, polygon in element_polygons:
         for obstacle_id, obstacle_polygon in obstacle_polygons:
@@ -185,8 +182,7 @@ def validate_layout_candidates(
     try:
         room = polygon_from_data(semantic.room)
         obstacle_polygons = [
-            (obstacle.id, polygon_from_data(obstacle.polygon))
-            for obstacle in semantic.obstacles
+            (obstacle.id, polygon_from_data(obstacle.polygon)) for obstacle in semantic.obstacles
         ]
     except ValueError as exc:
         raise LayoutValidationError("Semantic room or obstacle geometry is invalid.") from exc
