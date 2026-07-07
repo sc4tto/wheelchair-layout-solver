@@ -183,9 +183,7 @@ def _score_element(element: ElementSpec, transform: Transform) -> ElementScoreBr
         element.transform.rotation_deg,
     )
     move_component = _clean_float(translation_distance * (1.0 + element.costs.move))
-    rotation_component = _clean_float(
-        (rotation_delta / 90.0) * (1.0 + element.costs.rotate)
-    )
+    rotation_component = _clean_float((rotation_delta / 90.0) * (1.0 + element.costs.rotate))
     subtotal = _clean_float(move_component + rotation_component)
 
     return ElementScoreBreakdown(
@@ -207,9 +205,7 @@ def _score_candidate(
         _score_element(element, transforms[element.id]) for element in semantic.elements
     ]
     actual_changed_ids = [
-        element.id
-        for element in semantic.elements
-        if transforms[element.id] != element.transform
+        element.id for element in semantic.elements if transforms[element.id] != element.transform
     ]
     if candidate.changed_element_ids != actual_changed_ids:
         raise LayoutScoringError(
@@ -240,9 +236,7 @@ def score_valid_layout_candidates(
     _validate_validation_partition(candidate_set, validation_set)
 
     valid_id_set = set(validation_set.valid_candidate_ids)
-    scored_rows: list[
-        tuple[float, str, LayoutCandidate, list[ElementScoreBreakdown]]
-    ] = []
+    scored_rows: list[tuple[float, str, LayoutCandidate, list[ElementScoreBreakdown]]] = []
     for candidate in candidate_set.candidates:
         if candidate.id not in valid_id_set:
             continue
